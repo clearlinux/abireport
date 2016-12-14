@@ -23,7 +23,7 @@ import (
 
 const (
 	// ABIReportVersion is the public version of the tool
-	ABIReportVersion = "1.0.0"
+	ABIReportVersion = "1.0.1"
 )
 
 // versionCmd handles "abireport version"
