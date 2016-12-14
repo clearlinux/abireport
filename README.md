@@ -4,7 +4,7 @@ abireport
 [![Report](https://goreportcard.com/badge/github.com/clearlinux/abireport)](https://goreportcard.com/report/github.com/clearlinux/abireport) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 
-An agnostic tool for creating Application Binary Interface (`ABI`) reports from a set of binary packages. This tool is intended to assist packagers & developers of Linux distributions. It should be run at the end of the build, or even during the final stages of the build using the `scan-tree` root to be as unobtrusive as possible.
+A distro-agnostic tool for creating Application Binary Interface (`ABI`) reports from a set of binary packages. This tool is intended to assist packagers & developers of Linux distributions. It should be run at the end of the build, or even during the final stages of the build using the `scan-tree` root to be as unobtrusive as possible.
 
 The tool, when invoked with `scan-packages`, will explode the packages requested, and perform an analysis of the binaries inside. From this, we create two files:
 
