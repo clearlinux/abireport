@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv='content-type' value='text/html;charset=utf8'>
+  <meta name='generator' value='Ronn/v0.7.3 (http://github.com/rtomayko/ronn/tree/0.7.3)'>
+  <title>abireport(1) - Generate ELF ABI reports</title>
+  <style type='text/css' media='all'>
+  /* style: man */
+  body#manpage {margin:0}
+  .mp {max-width:100ex;padding:0 9ex 1ex 4ex}
+  .mp p,.mp pre,.mp ul,.mp ol,.mp dl {margin:0 0 20px 0}
+  .mp h2 {margin:10px 0 0 0}
+  .mp > p,.mp > pre,.mp > ul,.mp > ol,.mp > dl {margin-left:8ex}
+  .mp h3 {margin:0 0 0 4ex}
+  .mp dt {margin:0;clear:left}
+  .mp dt.flush {float:left;width:8ex}
+  .mp dd {margin:0 0 0 9ex}
+  .mp h1,.mp h2,.mp h3,.mp h4 {clear:left}
+  .mp pre {margin-bottom:20px}
+  .mp pre+h2,.mp pre+h3 {margin-top:22px}
+  .mp h2+pre,.mp h3+pre {margin-top:5px}
+  .mp img {display:block;margin:auto}
+  .mp h1.man-title {display:none}
+  .mp,.mp code,.mp pre,.mp tt,.mp kbd,.mp samp,.mp h3,.mp h4 {font-family:monospace;font-size:14px;line-height:1.42857142857143}
+  .mp h2 {font-size:16px;line-height:1.25}
+  .mp h1 {font-size:20px;line-height:2}
+  .mp {text-align:justify;background:#fff}
+  .mp,.mp code,.mp pre,.mp pre code,.mp tt,.mp kbd,.mp samp {color:#131211}
+  .mp h1,.mp h2,.mp h3,.mp h4 {color:#030201}
+  .mp u {text-decoration:underline}
+  .mp code,.mp strong,.mp b {font-weight:bold;color:#131211}
+  .mp em,.mp var {font-style:italic;color:#232221;text-decoration:none}
+  .mp a,.mp a:link,.mp a:hover,.mp a code,.mp a pre,.mp a tt,.mp a kbd,.mp a samp {color:#0000ff}
+  .mp b.man-ref {font-weight:normal;color:#434241}
+  .mp pre {padding:0 4ex}
+  .mp pre code {font-weight:normal;color:#434241}
+  .mp h2+pre,h3+pre {padding-left:0}
+  ol.man-decor,ol.man-decor li {margin:3px 0 10px 0;padding:0;float:left;width:33%;list-style-type:none;text-transform:uppercase;color:#999;letter-spacing:1px}
+  ol.man-decor {width:100%}
+  ol.man-decor li.tl {text-align:left}
+  ol.man-decor li.tc {text-align:center;letter-spacing:4px}
+  ol.man-decor li.tr {text-align:right;float:right}
+  </style>
+</head>
+<!--
+  The following styles are deprecated and will be removed at some point:
+  div#man, div#man ol.man, div#man ol.head, div#man ol.man.
+
+  The .man-page, .man-decor, .man-head, .man-foot, .man-title, and
+  .man-navigation should be used instead.
+-->
+<body id='manpage'>
+  <div class='mp' id='man'>
+
+  <div class='man-navigation' style='display:none'>
+    <a href="#NAME">NAME</a>
+    <a href="#SYNOPSIS">SYNOPSIS</a>
+    <a href="#DESCRIPTION">DESCRIPTION</a>
+    <a href="#OPTIONS">OPTIONS</a>
+    <a href="#SUBCOMMANDS">SUBCOMMANDS</a>
+    <a href="#EXIT-STATUS">EXIT STATUS</a>
+    <a href="#COPYRIGHT">COPYRIGHT</a>
+    <a href="#NOTES">NOTES</a>
+  </div>
+
+  <ol class='man-decor man-head man head'>
+    <li class='tl'>abireport(1)</li>
+    <li class='tc'></li>
+    <li class='tr'>abireport(1)</li>
+  </ol>
+
+  <h2 id="NAME">NAME</h2>
+<p class="man-name">
+  <code>abireport</code> - <span class="man-whatis">Generate ELF ABI reports</span>
+</p>
+
+<h2 id="SYNOPSIS">SYNOPSIS</h2>
+
+<p><code>abireport [subcommand] &lt;flags></code></p>
+
+<h2 id="DESCRIPTION">DESCRIPTION</h2>
+
+<p><code>abireport(1)</code> is tool to generate an ABI (Application Binary Interface) report
+from ELF binaries. In either operational mode, it will scan all dynamic libraries
+and executables that it encounteres, and emitting files to describe the ABI.</p>
+
+<p>These file names may be different if you pass the <code>-p</code>,<code>--prefix</code> option. Also
+note that for a non <code>x86_64</code> architecture, a unique suffix will be used for the
+report file to enable tracking of multilib/multiarch configurations. The default
+filename suffix for <code>x86</code> is <code>32</code>.</p>
+
+<ul>
+<li><p><code>symbols</code></p>
+
+<p> A file containing a <code>$soname</code>:<code>$symbol</code> mapping for the entire scanned set.
+ This file is sorted first by <code>$soname</code>, i.e. <code>libz.so.1</code>, and all symbols
+ for that library are listed, sorted by alphabetical order.</p>
+
+<p> Running the tool will automatically truncate this file if it exists prior
+ to creating a new report.</p></li>
+<li><p><code>used_libs</code></p>
+
+<p> A file containing an alphabetically sorted list of dependencies required
+ for the given data set. Any symbol that one of the files depends on that
+ can be satisfied within the given data, set, even if it is not <strong>exported</strong>
+ as a symbol, will omit the <code>$soname</code> dependency from the list.</p>
+
+<p> Used libs are determined by the <code>DT_NEEDED</code> section of the ELF file.</p>
+
+<p> Running the tool will automatically truncate this file if it exists prior
+ to creating a new report.</p></li>
+</ul>
+
+
+<h2 id="OPTIONS">OPTIONS</h2>
+
+<p>These options apply to all subcommands within <code>abireport(1)</code>.</p>
+
+<ul>
+<li><p><code>-p</code>, <code>--prefix</code></p>
+
+<p>Set the prefix used in filenames created by <code>abireport(1)</code>.  This may be
+used to assist integration by providing more unique filenames.</p></li>
+<li><p><code>-D</code>, <code>--output-dir</code></p>
+
+<p>Set the output directory for files created by <code>abireport(1)</code>. This is
+limited strictly to the report files.</p>
+
+<p>This option defaults to the current working directory (<code>.</code>).</p></li>
+<li><p><code>-h</code>, <code>--help</code></p>
+
+<p>Help provides an explanation for any command or subcommand. Without any
+specified subcommands it will list the main subcommands for the application.</p></li>
+</ul>
+
+
+<h2 id="SUBCOMMANDS">SUBCOMMANDS</h2>
+
+<p>Subcommands are mutually exclusive, you may only use one at a time. Note that
+all subcommands respect the global flags.</p>
+
+<h3 id="scan-tree-root-">scan-tree [root]</h3>
+
+<p>Generate a report from the contents of the indicated root directory.
+It is assumed that this is the true root of that filesystem, containing a
+legitimate hierarchy, i.e. <code>/usr/lib</code>, etc.</p>
+
+<h3 id="scan-packages-package-package-">scan-packages [package] [package]</h3>
+
+<p>Generate a report from the contents of the given packages. They
+will all be extracted into a temporary directory and analysed in
+one go. You may pass multiple file names and directories here.</p>
+
+<p>When using directories, <code>abireport(1)</code> will not recurse, it
+will only look for a glob pattern of <strong>supported</strong> package types:</p>
+
+<ul>
+<li><code>*.rpm</code> - requires <code>rpm2cpio</code> and <code>cpio</code> on the host</li>
+<li><code>*.deb</code> - requires <code>dpkg</code> on the host</li>
+<li><code>*.eokpg</code> - requires <code>uneopkg</code> on the host.</li>
+</ul>
+
+
+<h3 id="version">version</h3>
+
+<pre><code>Print the version and copyright notice of `abireport(1)` and exit.
+</code></pre>
+
+<h2 id="EXIT-STATUS">EXIT STATUS</h2>
+
+<p>On success, 0 is returned. A non-zero return code signals a failure.</p>
+
+<h2 id="COPYRIGHT">COPYRIGHT</h2>
+
+<ul>
+<li>Copyright © 2016 Intel Corporation, License: CC-BY-SA-3.0</li>
+</ul>
+
+
+<h2 id="NOTES">NOTES</h2>
+
+<p>Creative Commons Attribution-ShareAlike 3.0 Unported</p>
+
+<ul>
+<li>http://creativecommons.org/licenses/by-sa/3.0/</li>
+</ul>
+
+
+
+  <ol class='man-decor man-foot man foot'>
+    <li class='tl'></li>
+    <li class='tc'>December 2016</li>
+    <li class='tr'>abireport(1)</li>
+  </ol>
+
+  </div>
+</body>
+</html>

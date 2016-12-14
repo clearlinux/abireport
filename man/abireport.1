@@ -1,0 +1,115 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "ABIREPORT" "1" "December 2016" "" ""
+.
+.SH "NAME"
+\fBabireport\fR \- Generate ELF ABI reports
+.
+.SH "SYNOPSIS"
+\fBabireport [subcommand] <flags>\fR
+.
+.SH "DESCRIPTION"
+\fBabireport(1)\fR is tool to generate an ABI (Application Binary Interface) report from ELF binaries\. In either operational mode, it will scan all dynamic libraries and executables that it encounteres, and emitting files to describe the ABI\.
+.
+.P
+These file names may be different if you pass the \fB\-p\fR,\fB\-\-prefix\fR option\. Also note that for a non \fBx86_64\fR architecture, a unique suffix will be used for the report file to enable tracking of multilib/multiarch configurations\. The default filename suffix for \fBx86\fR is \fB32\fR\.
+.
+.IP "\(bu" 4
+\fBsymbols\fR
+.
+.IP
+A file containing a \fB$soname\fR:\fB$symbol\fR mapping for the entire scanned set\. This file is sorted first by \fB$soname\fR, i\.e\. \fBlibz\.so\.1\fR, and all symbols for that library are listed, sorted by alphabetical order\.
+.
+.IP
+Running the tool will automatically truncate this file if it exists prior to creating a new report\.
+.
+.IP "\(bu" 4
+\fBused_libs\fR
+.
+.IP
+A file containing an alphabetically sorted list of dependencies required for the given data set\. Any symbol that one of the files depends on that can be satisfied within the given data, set, even if it is not \fBexported\fR as a symbol, will omit the \fB$soname\fR dependency from the list\.
+.
+.IP
+Used libs are determined by the \fBDT_NEEDED\fR section of the ELF file\.
+.
+.IP
+Running the tool will automatically truncate this file if it exists prior to creating a new report\.
+.
+.IP "" 0
+.
+.SH "OPTIONS"
+These options apply to all subcommands within \fBabireport(1)\fR\.
+.
+.IP "\(bu" 4
+\fB\-p\fR, \fB\-\-prefix\fR
+.
+.IP
+Set the prefix used in filenames created by \fBabireport(1)\fR\. This may be used to assist integration by providing more unique filenames\.
+.
+.IP "\(bu" 4
+\fB\-D\fR, \fB\-\-output\-dir\fR
+.
+.IP
+Set the output directory for files created by \fBabireport(1)\fR\. This is limited strictly to the report files\.
+.
+.IP
+This option defaults to the current working directory (\fB\.\fR)\.
+.
+.IP "\(bu" 4
+\fB\-h\fR, \fB\-\-help\fR
+.
+.IP
+Help provides an explanation for any command or subcommand\. Without any specified subcommands it will list the main subcommands for the application\.
+.
+.IP "" 0
+.
+.SH "SUBCOMMANDS"
+Subcommands are mutually exclusive, you may only use one at a time\. Note that all subcommands respect the global flags\.
+.
+.SS "scan\-tree [root]"
+Generate a report from the contents of the indicated root directory\. It is assumed that this is the true root of that filesystem, containing a legitimate hierarchy, i\.e\. \fB/usr/lib\fR, etc\.
+.
+.SS "scan\-packages [package] [package]"
+Generate a report from the contents of the given packages\. They will all be extracted into a temporary directory and analysed in one go\. You may pass multiple file names and directories here\.
+.
+.P
+When using directories, \fBabireport(1)\fR will not recurse, it will only look for a glob pattern of \fBsupported\fR package types:
+.
+.IP "\(bu" 4
+\fB*\.rpm\fR \- requires \fBrpm2cpio\fR and \fBcpio\fR on the host
+.
+.IP "\(bu" 4
+\fB*\.deb\fR \- requires \fBdpkg\fR on the host
+.
+.IP "\(bu" 4
+\fB*\.eokpg\fR \- requires \fBuneopkg\fR on the host\.
+.
+.IP "" 0
+.
+.SS "version"
+.
+.nf
+
+Print the version and copyright notice of `abireport(1)` and exit\.
+.
+.fi
+.
+.SH "EXIT STATUS"
+On success, 0 is returned\. A non\-zero return code signals a failure\.
+.
+.SH "COPYRIGHT"
+.
+.IP "\(bu" 4
+Copyright © 2016 Intel Corporation, License: CC\-BY\-SA\-3\.0
+.
+.IP "" 0
+.
+.SH "NOTES"
+Creative Commons Attribution\-ShareAlike 3\.0 Unported
+.
+.IP "\(bu" 4
+http://creativecommons\.org/licenses/by\-sa/3\.0/
+.
+.IP "" 0
+
