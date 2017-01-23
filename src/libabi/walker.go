@@ -118,6 +118,10 @@ func (a *Report) isPathInteresting(path string, info os.FileInfo) bool {
 	if info.Mode()&os.ModeSymlink == os.ModeSymlink {
 		return false
 	}
+	// ELF Header & content, rudimentary "is ELF, not empty"
+	if info.Size() < 5 {
+		return false
+	}
 	// Really don't want to examine .debug files
 	if strings.Contains(path, "/debug/") && strings.HasSuffix(path, ".debug") {
 		return false
