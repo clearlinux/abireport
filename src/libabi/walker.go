@@ -132,6 +132,10 @@ func (a *Report) isPathInteresting(path string, info os.FileInfo) bool {
 // walkTree is our callback for filepath.Walk, to actually do the initial
 // tree traversal.
 func (a *Report) walkTree(path string, info os.FileInfo, err error) error {
+	// no info, i.e. failed open on file /proc/2/fd, etc.
+	if info == nil {
+		return nil
+	}
 	// Determine if the path is actually worth looking at
 	if !a.isPathInteresting(path, info) {
 		return nil
