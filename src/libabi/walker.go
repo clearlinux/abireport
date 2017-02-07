@@ -96,7 +96,6 @@ func IsAnELF(p string) (bool, error) {
 func (a *Report) recordPath(path string) *Record {
 	isElf, err := IsAnELF(path)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error checking file %v: %v\n", path, err)
 		return nil
 	}
 	if !isElf {
