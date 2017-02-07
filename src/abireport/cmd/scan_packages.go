@@ -96,7 +96,6 @@ func explodeAndScan(packages []string) (*libabi.Report, error) {
 	exFunc := explode.Impls[exploderType]
 	defer func() {
 		if explode.OutputDir != "" && libabi.PathExists(explode.OutputDir) {
-			fmt.Fprintf(os.Stderr, "Cleaning up %s\n", explode.OutputDir)
 			os.RemoveAll(explode.OutputDir)
 		}
 	}()

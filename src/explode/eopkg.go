@@ -17,7 +17,6 @@
 package explode
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -47,11 +46,10 @@ func Eopkg(pkgs []string) (string, error) {
 		eopkg := exec.Command("uneopkg", []string{
 			fp,
 		}...)
-		eopkg.Stdout = os.Stdout
-		eopkg.Stderr = os.Stdout
+		eopkg.Stdout = nil
+		eopkg.Stderr = os.Stderr
 		eopkg.Dir = rootDir
 
-		fmt.Fprintf(os.Stderr, "Extracting %s\n", archive)
 		if err = eopkg.Run(); err != nil {
 			return "", err
 		}

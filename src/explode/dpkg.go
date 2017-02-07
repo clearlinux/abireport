@@ -17,7 +17,6 @@
 package explode
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -39,17 +38,16 @@ func Dpkg(pkgs []string) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		eopkg := exec.Command("dpkg", []string{
+		dpkg := exec.Command("dpkg", []string{
 			"-X",
 			fp,
 			filepath.Join(rootDir, "install"),
 		}...)
-		eopkg.Stdout = os.Stdout
-		eopkg.Stderr = os.Stdout
-		eopkg.Dir = rootDir
+		dpkg.Stdout = nil
+		dpkg.Stderr = os.Stderr
+		dpkg.Dir = rootDir
 
-		fmt.Fprintf(os.Stderr, "Extracting %s\n", archive)
-		if err = eopkg.Run(); err != nil {
+		if err = dpkg.Run(); err != nil {
 			return "", err
 		}
 	}

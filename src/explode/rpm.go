@@ -17,7 +17,6 @@
 package explode
 
 import (
-	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -47,17 +46,17 @@ func RPM(pkgs []string) (string, error) {
 			"-i",
 			"-m",
 			"-d",
+			"--quiet",
 		}...)
 		// Pipe rpm into cpio
 		r, w := io.Pipe()
 		defer r.Close()
 		rpm.Stdout = w
 		cpio.Stdin = r
-		cpio.Stdout = os.Stdout
-		cpio.Stderr = os.Stdout
+		cpio.Stdout = nil
+		cpio.Stderr = os.Stderr
 		cpio.Dir = rootDir
 
-		fmt.Fprintf(os.Stderr, "Extracting %s\n", archive)
 		rpm.Start()
 		cpio.Start()
 		go func() {
