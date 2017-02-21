@@ -19,7 +19,6 @@ package explode
 import (
 	"io"
 	"io/ioutil"
-	"os"
 	"os/exec"
 	"path/filepath"
 )
@@ -54,7 +53,7 @@ func RPM(pkgs []string) (string, error) {
 		rpm.Stdout = w
 		cpio.Stdin = r
 		cpio.Stdout = nil
-		cpio.Stderr = os.Stderr
+		cpio.Stderr = nil
 		cpio.Dir = rootDir
 
 		rpm.Start()
