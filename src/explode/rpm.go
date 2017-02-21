@@ -46,6 +46,7 @@ func RPM(pkgs []string) (string, error) {
 			"-m",
 			"-d",
 			"--quiet",
+			"-u",
 		}...)
 		// Pipe rpm into cpio
 		r, w := io.Pipe()
