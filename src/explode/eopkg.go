@@ -17,20 +17,21 @@
 package explode
 
 import (
+	"io"
 	"io/ioutil"
-	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 )
 
-// Eopkg will explode all .eopkg's specified and then return
-// the install/ path inside that exploded tree.
+// Eopkg will explode all eopkgs passed to it and return the path to
+// the "root" to walk.
 func Eopkg(pkgs []string) (string, error) {
 	rootDir, err := ioutil.TempDir("", "abireport-eopkg")
 	if err != nil {
 		return "", err
 	}
+
 	// Ensure cleanup happens
 	OutputDir = rootDir
 
@@ -43,17 +44,37 @@ func Eopkg(pkgs []string) (string, error) {
 		if strings.HasSuffix(archive, ".delta.eopkg") {
 			continue
 		}
-		eopkg := exec.Command("uneopkg", []string{
-			fp,
-		}...)
-		eopkg.Stdout = nil
-		eopkg.Stderr = os.Stderr
-		eopkg.Dir = rootDir
 
-		if err = eopkg.Run(); err != nil {
+		eopkg := exec.Command("unzip", []string{
+			"-p",
+			fp,
+			"install.tar.xz",
+		}...)
+		tar := exec.Command("tar", []string{
+			"-xJf",
+			"-",
+		}...)
+		// Pipe eopkg into tar
+		r, w := io.Pipe()
+		defer r.Close()
+		eopkg.Stdout = w
+		tar.Stdin = r
+		tar.Stdout = nil
+		tar.Stderr = nil
+		tar.Dir = rootDir
+
+		eopkg.Start()
+		tar.Start()
+		go func() {
+			defer w.Close()
+			eopkg.Wait()
+		}()
+		if err := tar.Wait(); err != nil {
+			r.Close()
 			return "", err
 		}
+		r.Close()
 	}
 
-	return filepath.Join(rootDir, "install"), nil
+	return rootDir, nil
 }
