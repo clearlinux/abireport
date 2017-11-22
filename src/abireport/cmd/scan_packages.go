@@ -128,7 +128,7 @@ func locatePackages(searchLocations []string) ([]string, error) {
 	for _, location := range searchLocations {
 		found, err := discoverPackages(location)
 		if err != nil {
-			return nil, fmt.Errorf("Error locating packages: %v\n", err)
+			return nil, fmt.Errorf("error locating packages: %v", err)
 		}
 		discoveredPkgs = append(discoveredPkgs, found...)
 	}
