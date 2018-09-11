@@ -36,7 +36,7 @@ func (a *Report) isLibraryDir(dir string) bool {
 
 // analyzeLibrary will examine the given shared library and populate
 // the soname and symbols fields of the record
-func (a *Report) analzyeLibrary(record *Record, file *elf.File) error {
+func (a *Report) analyzeLibrary(record *Record, file *elf.File) error {
 	dynstring, err := file.DynString(elf.DT_SONAME)
 	if err != nil {
 		return err
@@ -116,7 +116,7 @@ func (a *Report) AnalyzeOne(record *Record) error {
 
 	// Analyze library elements
 	if record.Flags&RecordTypeLibrary == RecordTypeLibrary {
-		if err := a.analzyeLibrary(record, file); err != nil {
+		if err := a.analyzeLibrary(record, file); err != nil {
 			return err
 		}
 	} else {
