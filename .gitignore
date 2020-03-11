@@ -1,2 +1,5 @@
-/bin/
-/pkg/
+vendor/
+man/abireport.1
+man/abireport.1.html
+*.tar.xz
+abireport

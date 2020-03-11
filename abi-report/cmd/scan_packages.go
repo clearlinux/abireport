@@ -17,10 +17,10 @@
 package cmd
 
 import (
-	"explode"
 	"fmt"
+	"github.com/clearlinux/abireport/explode"
+	"github.com/clearlinux/abireport/libabi"
 	"github.com/spf13/cobra"
-	"libabi"
 	"os"
 	"path/filepath"
 )

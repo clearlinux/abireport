@@ -17,7 +17,7 @@
 package main
 
 import (
-	"abireport/cmd"
+	"github.com/clearlinux/abireport/abi-report/cmd"
 	"os"
 )
 

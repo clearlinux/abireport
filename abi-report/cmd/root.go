@@ -17,8 +17,8 @@
 package cmd
 
 import (
+	"github.com/clearlinux/abireport/libabi"
 	"github.com/spf13/cobra"
-	"libabi"
 )
 
 var (
