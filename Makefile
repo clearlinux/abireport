@@ -13,8 +13,8 @@ install: all
 	install -m 00644 man/*.1 $(DESTDIR)/usr/share/man/man1/.; \
 
 gen_docs: man/abireport.1.md
-	@ronn --roff < man/abireport.1.md > man/abireport.1
-	@ronn --html < man/abireport.1.md > man/abireport.1.html
+	pandoc -s -f markdown -t man man/abireport.1.md --output man/abireport.1
+	pandoc -s -f markdown -t html man/abireport.1.md --output man/abireport.1.html
 
 vendor:
 	@go mod vendor

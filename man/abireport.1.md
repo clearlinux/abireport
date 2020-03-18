@@ -1,6 +1,8 @@
-abireport(1) -- Generate ELF ABI reports
-========================================
+% ABIREPORT(1)
 
+## NAME
+
+`abireport -- Generate ELF ABI reports`
 
 ## SYNOPSIS
 
