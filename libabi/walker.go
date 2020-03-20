@@ -174,6 +174,8 @@ func (a *Report) jobProcessor() {
 			a.jobDone()
 		}()
 	}
+	defer close(a.jobChan)
+	filepath.Walk(a.Root, a.walkTree)
 }
 
 // storeProcessor is responsible for storing into memory
@@ -209,14 +211,9 @@ func (a *Report) storeProcessor() {
 // Walk will attempt to walk the preconfigured tree, and collect a set
 // of "interesting" files along the way.
 func (a *Report) Walk() error {
-	a.wg.Add(3 + a.nJobs)
+	a.wg.Add(2 + a.nJobs)
 	go a.jobProcessor()
 	go a.storeProcessor()
-	go func() {
-		defer a.wg.Done()
-		filepath.Walk(a.Root, a.walkTree)
-		close(a.jobChan)
-	}()
 	a.wg.Wait()
 	return nil
 }
