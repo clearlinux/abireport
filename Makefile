@@ -33,6 +33,6 @@ dist: vendor gen_docs
 		git clean -xf -e man/abireport.1 -e man/abireport.1.html; \
 		rm -fr .git .gitignore; \
 	);
-	@tar -C $(TMP) -cf abireport-$(VERSION).tar .
+	@tar -C $(TMP) -cf abireport-$(VERSION).tar abireport-$(VERSION)
 	@xz abireport-$(VERSION).tar
 	@rm -fr $(TMP)
