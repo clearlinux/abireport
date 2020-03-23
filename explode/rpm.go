@@ -17,7 +17,6 @@
 package explode
 
 import (
-	"io"
 	"io/ioutil"
 	"os/exec"
 	"path/filepath"
@@ -48,26 +47,18 @@ func RPM(pkgs []string) (string, error) {
 			"--quiet",
 			"-u",
 		}...)
-		// Pipe rpm into cpio
-		r, w := io.Pipe()
-		defer r.Close()
-		rpm.Stdout = w
-		cpio.Stdin = r
+
+		cpio.Stdin, _ = rpm.StdoutPipe()
 		cpio.Stdout = nil
 		cpio.Stderr = nil
 		cpio.Dir = rootDir
-
-		rpm.Start()
 		cpio.Start()
-		go func() {
-			defer w.Close()
-			rpm.Wait()
-		}()
-		if err := cpio.Wait(); err != nil {
-			r.Close()
+		if err := rpm.Run(); err != nil {
 			return "", err
 		}
-		r.Close()
+		if err := cpio.Wait(); err != nil {
+			return "", err
+		}
 	}
 
 	return rootDir, nil
