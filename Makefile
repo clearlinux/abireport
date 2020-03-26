@@ -19,8 +19,9 @@ gen_docs: man/abireport.1.md
 vendor:
 	@go mod vendor
 
+VARIABLE = github.com/clearlinux/abireport/abi-report/cmd.ABIReportVersion
 all: vendor
-	(cd abi-report && go build --buildmode=pie -mod=vendor -o ../abireport)
+	(cd abi-report && go build --buildmode=pie -mod=vendor -ldflags="-X $(VARIABLE)=$(VERSION)" -o ../abireport)
 
 dist: vendor gen_docs
 	@rm -f abireport-$(VERSION).tar.xz

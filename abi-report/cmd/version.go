@@ -21,10 +21,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	// ABIReportVersion is the public version of the tool
-	ABIReportVersion = "1.0.7"
-)
+// ABIReportVersion is the public version of the tool. The value is initialized
+// with a linker option to `go build`. See the toplevel Makefile for details.
+var ABIReportVersion = "UNKNOWN"
 
 // versionCmd handles "abireport version"
 var versionCommand = &cobra.Command{
