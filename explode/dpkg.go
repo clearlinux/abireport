@@ -26,7 +26,7 @@ import (
 // Dpkg will explode all .deb's specified and then return
 // the install/ path inside that exploded tree.
 func Dpkg(pkgs []string) (string, error) {
-	rootDir, err := ioutil.TempDir("", "abireport-dpkg")
+	rootDir, err := ioutil.TempDir("/var/tmp", "abireport-dpkg")
 	if err != nil {
 		return "", err
 	}
