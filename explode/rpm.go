@@ -25,7 +25,7 @@ import (
 // RPM will explode all RPMs passed to it and return the path to
 // the "root" to walk.
 func RPM(pkgs []string) (string, error) {
-	rootDir, err := ioutil.TempDir("", "abireport-rpm")
+	rootDir, err := ioutil.TempDir("/var/tmp", "abireport-rpm")
 	if err != nil {
 		return "", err
 	}

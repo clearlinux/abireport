@@ -27,7 +27,7 @@ import (
 // Eopkg will explode all eopkgs passed to it and return the path to
 // the "root" to walk.
 func Eopkg(pkgs []string) (string, error) {
-	rootDir, err := ioutil.TempDir("", "abireport-eopkg")
+	rootDir, err := ioutil.TempDir("/var/tmp", "abireport-eopkg")
 	if err != nil {
 		return "", err
 	}
